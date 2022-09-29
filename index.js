@@ -4,7 +4,9 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 require("dotenv").config();
 
+// Utility functions
 const makeid = require("./utils/makeid");
+const isDateValid = require("./utils/isDateValid");
 
 const users = [
   {
@@ -53,10 +55,36 @@ app
     res.send(users);
   });
 
-app.post("/api/users/:_id/exercises", (req, res) => {
+app.route("/api/users/:_id/exercises").post((req, res) => {
   const id = req.params._id;
-  const username = users.find((user) => user._id === id).username;
+  const user = users.find((user) => user._id === id);
+
+  if (user === undefined) {
+    return res.json({ error: "Can't find username matching requested id" });
+  }
+
+  const username = user.username;
   const { description, duration, date } = req.body;
+
+  if (description.length === 0) {
+    return res.json({ error: "Description is required" });
+  } else if (description.length > 100) {
+    return res.json({ error: "Description too long (max 100 characters)" });
+  }
+
+  if (duration.length === 0) {
+    return res.json({ error: "Duration is required" });
+  } else if (/^[0-9]*$/.test(duration) === false) {
+    return res.json({ error: "Duration should be a number" });
+  } else if (Number(duration) > 312480) {
+    return res.json({
+      error: "Duration too long (max 312480 min)",
+    });
+  }
+
+  if (date.length > 0 && !isDateValid(date)) {
+    return res.json({ error: "Invalid date" });
+  }
 
   const newExercise = {
     _id: id,
@@ -67,6 +95,7 @@ app.post("/api/users/:_id/exercises", (req, res) => {
   };
 
   exercises.push(newExercise);
+
   console.log(exercises);
 
   res.json(newExercise);

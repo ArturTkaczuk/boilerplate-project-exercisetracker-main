@@ -31,22 +31,27 @@ app.get("/", (req, res) => {
   res.sendFile(__dirname + "/views/index.html");
 });
 
-app.route("/api/users").post((req, res) => {
-  const username = req.body.username;
-  if (username.length === 0) {
-    res.json({ error: "Username is required" });
-  } else if (username.length > 20) {
-    res.json({ error: "Username is too long (max 20 characters)" });
-  }
+app
+  .route("/api/users")
+  .post((req, res) => {
+    const username = req.body.username;
+    if (username.length === 0) {
+      res.json({ error: "Username is required" });
+    } else if (username.length > 20) {
+      res.json({ error: "Username is too long (max 20 characters)" });
+    }
 
-  const newUser = {
-    username,
-    _id: makeid(),
-  };
+    const newUser = {
+      username,
+      _id: makeid(),
+    };
 
-  users.push(newUser);
-  res.json(newUser);
-});
+    users.push(newUser);
+    res.json(newUser);
+  })
+  .get((req, res) => {
+    res.send(users);
+  });
 
 app.get("*", (req, res) => {
   res.sendFile(__dirname + "/views/404.html");

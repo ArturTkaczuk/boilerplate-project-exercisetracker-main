@@ -96,8 +96,6 @@ app.route("/api/users/:_id/exercises").post((req, res) => {
 
   exercises.push(newExercise);
 
-  console.log(exercises);
-
   res.json(newExercise);
 });
 

@@ -53,6 +53,25 @@ app
     res.send(users);
   });
 
+app.post("/api/users/:_id/exercises", (req, res) => {
+  const id = req.params._id;
+  const username = users.find((user) => user._id === id).username;
+  const { description, duration, date } = req.body;
+
+  const newExercise = {
+    _id: id,
+    username,
+    description,
+    duration,
+    date,
+  };
+
+  exercises.push(newExercise);
+  console.log(exercises);
+
+  res.json(newExercise);
+});
+
 app.get("*", (req, res) => {
   res.sendFile(__dirname + "/views/404.html");
 });

@@ -64,7 +64,14 @@ app.route("/api/users/:_id/exercises").post((req, res) => {
   }
 
   const username = user.username;
-  const { description, duration, date } = req.body;
+  const description = req.body.description;
+  const duration = Number(req.body.duration);
+
+  const date = req.body.date;
+  const formatedDate =
+    date === ""
+      ? new Date().toDateString()
+      : new Date(req.body.date).toDateString();
 
   if (description.length === 0) {
     return res.json({ error: "Description is required" });
@@ -91,7 +98,7 @@ app.route("/api/users/:_id/exercises").post((req, res) => {
     username,
     description,
     duration,
-    date,
+    date: formatedDate,
   };
 
   exercises.push(newExercise);

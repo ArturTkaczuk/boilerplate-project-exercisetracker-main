@@ -29,6 +29,8 @@ app.use(cors());
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: true }));
 
+const findUser = () => {};
+
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/views/index.html");
 });
@@ -56,8 +58,8 @@ app
   });
 
 app.route("/api/users/:_id/exercises").post((req, res) => {
-  const id = req.params._id;
-  const user = users.find((user) => user._id === id);
+  const _id = req.params._id;
+  const user = users.find((user) => user._id === _id);
 
   if (user === undefined) {
     return res.json({ error: "Can't find username matching requested id" });
@@ -94,7 +96,7 @@ app.route("/api/users/:_id/exercises").post((req, res) => {
   }
 
   const newExercise = {
-    _id: id,
+    _id,
     username,
     description,
     duration,
@@ -104,6 +106,29 @@ app.route("/api/users/:_id/exercises").post((req, res) => {
   exercises.push(newExercise);
 
   res.json(newExercise);
+});
+
+app.get("/api/users/:_id/logs", (req, res) => {
+  const _id = req.params._id;
+  const user = users.find((user) => user._id === _id);
+
+  if (user === undefined) {
+    return res.json({ error: "Can't find username matching requested id" });
+  }
+
+  const username = user.username;
+
+  const exercisesFilteredWith_id = exercises.filter(
+    (exercise) => exercise._id === _id
+  );
+  const exercisesFilteredWith_idCount = exercisesFilteredWith_id.length;
+
+  res.json({
+    _id,
+    username,
+    count: exercisesFilteredWith_idCount,
+    log: exercisesFilteredWith_id,
+  });
 });
 
 app.get("*", (req, res) => {

@@ -8,22 +8,9 @@ require("dotenv").config();
 const makeid = require("./utils/makeid");
 const isDateValid = require("./utils/isDateValid");
 
-const users = [
-  {
-    username: "fcc_test",
-    _id: "5fb5853f734231456ccb3b05",
-  },
-];
+const users = [];
 
-const exercises = [
-  {
-    username: "fcc_test",
-    description: "test",
-    duration: 60,
-    date: "Mon Jan 01 1990",
-    _id: "5fb5853f734231456ccb3b05",
-  },
-];
+const exercises = [];
 
 app.use(cors());
 app.use(express.static("public"));

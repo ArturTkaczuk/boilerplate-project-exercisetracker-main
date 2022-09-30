@@ -118,16 +118,25 @@ app.get("/api/users/:_id/logs", (req, res) => {
 
   const username = user.username;
 
-  const exercisesFilteredWith_id = exercises.filter(
-    (exercise) => exercise._id === _id
-  );
-  const exercisesFilteredWith_idCount = exercisesFilteredWith_id.length;
+  const log = exercises
+    .filter((exercise) => exercise._id === _id)
+    .map((exercise) => {
+      const { description, duration, date } = exercise;
+
+      return {
+        description,
+        duration,
+        date,
+      };
+    });
+
+  const count = log.length;
 
   res.json({
     _id,
     username,
-    count: exercisesFilteredWith_idCount,
-    log: exercisesFilteredWith_id,
+    count,
+    log,
   });
 });
 

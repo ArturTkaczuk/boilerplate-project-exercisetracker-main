@@ -110,15 +110,10 @@ app.get("/api/users/:_id/logs", (req, res) => {
     .map((exercise) => {
       const { description, duration, date } = exercise;
 
-      const formatedDate =
-        date === ""
-          ? new Date().toDateString()
-          : new Date(req.body.date).toDateString();
-
       return {
         description,
         duration,
-        date: formatedDate,
+        date,
       };
     });
 
